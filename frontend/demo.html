@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Title</title>
+    <script src="js/vue/vue.min.js"></script>
+    <script src="js/echarts/echarts.js"></script>
+
+    <link rel="stylesheet" href="style/dashboard.css">
+    <link rel="stylesheet" href="style/app.css">
+</head>
+
+<body style="overflow-x: hidden;overflow-y:hidden;margin: 0;">
+
+<div id="app">
+
+    <div class="page_container">
+
+        <div class="dashboard_container">
+            <div class="row">
+                <div id="gauge1" class="pie_chart"></div>
+                <div id="line_chart" class="line_chart"></div>
+                <div id="gauge2" class="pie_chart"></div>
+            </div>
+
+            <div class="row">
+                <div class="info_card">
+                    <div>总时间: {{total_time}}分钟</div>
+                    <div>已进行: {{pass_time}}分钟</div>
+                </div>
+                <div class="info_card">
+                    <div>语速: {{speak_speed}}词/分钟</div>
+                    <div>语音留白率: {{speak_blank}}%</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="chat_area">
+                    <div class="dialog_window">{{dialog_content}}</div>
+                    <div class="dialog_btn_container">
+                        <div class="dialog_btn" @click="click_tutor_btn">助教总结</div>
+                        <div class="dialog_btn" @click="click_student_btn">学生提问</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+<script>
+    const app = new Vue({
+        el: "#app",
+
+        // data里边存放全局变量，这里的变量值和页面显示的内容是绑定的
+        data: {
+
+            /*
+            https://blog.csdn.net/LLL_liuhui/article/details/102391403
+            调整饼图的容器内位置
+             */
+            gauge_chart_1_option: {
+                title: {
+                    text: '状态仪表盘',
+                    left: 'center',
+                    padding: 20,
+                    textStyle: {
+                        fontSize: 14,
+                        color: '#ffffff'
+                    }
+                },
+
+                series: [
+                    {
+                        center: [100, 130],
+                        type: 'gauge',
+                        startAngle: 220,
+                        endAngle: 320,
+                        min: 0,
+                        max: 100,
+                        splitNumber: 10,
+                        itemStyle: {
+                            color: "#FF3B28",
+                            shadowColor: 'rgba(0,138,255,0.45)',
+                            shadowBlur: 10,
+                            shadowOffsetX: 2,
+                            shadowOffsetY: 2
+                        },
+                        progress: {
+                            show: true,
+                            roundCap: true,
+                            width: 10
+                        },
+                        pointer: {
+                            icon: 'path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z',
+                            length: '50%',
+                            width: 8,
+                            offsetCenter: [0, '5%']
+                        },
+                        axisLine: {
+                            roundCap: true,
+                            lineStyle: {
+                                width: 10
+                            }
+                        },
+                        axisTick: {
+                            splitNumber: 2,
+                            lineStyle: {
+                                width: 2,
+                                color: '#ffffff'
+                            }
+                        },
+                        splitLine: {
+                            length: 5,
+                            lineStyle: {
+                                width: 3,
+                                color: '#ffffff'
+                            }
+                        },
+                        axisLabel: {
+                            distance: 15,
+                            color: '#ffffff',
+                            fontSize: 10
+                        },
+                        title: {
+                            text: '饼图纹理',
+                            color: '#ffffff'
+                        },
+                        detail: {
+                            backgroundColor: 'rgba(255,255,255,0)',
+                            borderColor: 'rgba(255,255,255,0)',
+                            borderWidth: 0,
+                            width: '50%',
+                            lineHeight: 10,
+                            height: 10,
+                            borderRadius: 8,
+                            offsetCenter: [0, '35%'],
+                            valueAnimation: true,
+                            formatter: function (value) {
+                                return '{value|' + value.toFixed(0) + '}{unit|%}';
+                            },
+                            rich: {
+                                value: {
+                                    fontSize: 25,
+                                    fontWeight: 'bolder',
+                                    color: '#ffffff'
+                                },
+                                unit: {
+                                    fontSize: 10,
+                                    color: '#ffffff',
+                                    padding: [0, 0, -12, 0]
+                                }
+                            }
+                        },
+                        data: [
+                            {
+                                value: 50
+                            }
+                        ]
+                    }
+                ]
+            },
+            gauge_chart_2_option: {
+                title: {
+                    text: '状态仪表盘',
+                    left: 'center',
+                    padding: 20,
+                    textStyle: {
+                        fontSize: 14,
+                        color: '#ffffff'
+                    }
+                },
+
+                series: [
+                    {
+                        center: [100, 130],
+                        type: 'gauge',
+                        startAngle: 220,
+                        endAngle: 320,
+                        min: 0,
+                        max: 100,
+                        splitNumber: 10,
+                        itemStyle: {
+                            color: "#FF3B28",
+                            shadowColor: 'rgba(0,138,255,0.45)',
+                            shadowBlur: 10,
+                            shadowOffsetX: 2,
+                            shadowOffsetY: 2
+                        },
+                        progress: {
+                            show: true,
+                            roundCap: true,
+                            width: 10
+                        },
+                        pointer: {
+                            icon: 'path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z',
+                            length: '50%',
+                            width: 8,
+                            offsetCenter: [0, '5%']
+                        },
+                        axisLine: {
+                            roundCap: true,
+                            lineStyle: {
+                                width: 10
+                            }
+                        },
+                        axisTick: {
+                            splitNumber: 2,
+                            lineStyle: {
+                                width: 2,
+                                color: '#ffffff'
+                            }
+                        },
+                        splitLine: {
+                            length: 5,
+                            lineStyle: {
+                                width: 3,
+                                color: '#ffffff'
+                            }
+                        },
+                        axisLabel: {
+                            distance: 15,
+                            color: '#ffffff',
+                            fontSize: 10
+                        },
+                        title: {
+                            text: '饼图纹理',
+                            color: '#ffffff'
+                        },
+                        detail: {
+                            backgroundColor: 'rgba(255,255,255,0)',
+                            borderColor: 'rgba(255,255,255,0)',
+                            borderWidth: 0,
+                            width: '50%',
+                            lineHeight: 10,
+                            height: 10,
+                            borderRadius: 8,
+                            offsetCenter: [0, '35%'],
+                            valueAnimation: true,
+                            formatter: function (value) {
+                                return '{value|' + value.toFixed(0) + '}{unit|%}';
+                            },
+                            rich: {
+                                value: {
+                                    fontSize: 25,
+                                    fontWeight: 'bolder',
+                                    color: '#ffffff'
+                                },
+                                unit: {
+                                    fontSize: 10,
+                                    color: '#ffffff',
+                                    padding: [0, 0, -12, 0]
+                                }
+                            }
+                        },
+                        data: [
+                            {
+                                value: 50
+                            }
+                        ]
+                    }
+                ]
+            },
+            /*
+            https://blog.51cto.com/u_7544687/4714943
+            解决图表边距太大的问题
+
+            https://blog.csdn.net/weixin_45631278/article/details/107574442
+            symbol标记颜色修改
+             */
+            line_chart_option: {
+                legend: {
+                    orient: 'horizontal',
+                    top: 30,
+                    textStyle: {
+                        color: '#ffffff'
+                    }
+                },
+                grid: {
+                    top: 55,
+                    left: 50,
+                    right: 20,
+                    bottom: 30,
+                    width: 'auto',
+                    height: 'auto'
+                },
+                title: {
+                    text: '课堂氛围',
+                    left: 'center',
+                    padding: 10,
+                    textStyle: {
+                        fontSize: 16,
+                        color: '#ffffff'
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['15:00', '15:01', '15:02', '15:03', '15:04', '15:05', '15:06', '15:07', '15:08', '15:09'],
+                    splitLine: {
+                        show: false
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    splitLine: {
+                        show: false
+                    }
+                },
+                series: [
+                    {
+                        data: [150, 230, 224, 218, 135, 147, 260, 123, 423, 322],
+                        type: 'line',
+                        name: '教师',
+                        lineStyle: {
+                            color: '#E3312D',
+                            width: 3
+                        },
+                        smooth: 0.6,
+                    },
+                    {
+                        data: [20, 230, 224, 218, 140, 260, 10, 32, 330, 411],
+                        type: 'line',
+                        name: '学生',
+                        lineStyle: {
+                            color: '#5F58C0',
+                            width: 3
+                        },
+                        smooth: 0.6,
+                    }
+                ]
+            },
+            loading_ani_option: {
+                graphic: {
+                    elements: [
+                        {
+                            type: 'group',
+                            left: 'center',
+                            top: 'center',
+                            children: new Array(5).fill(0).map((val, i) => ({
+                                type: 'rect',
+                                x: i * 20,
+                                shape: {
+                                    x: 0,
+                                    y: -40,
+                                    width: 10,
+                                    height: 80
+                                },
+                                style: {
+                                    fill: '#5470c6'
+                                },
+                                keyframeAnimation: {
+                                    duration: 500,
+                                    delay: i * 100,
+                                    loop: true,
+                                    keyframes: [
+                                        {
+                                            percent: 0.5,
+                                            scaleY: 0.3,
+                                            easing: 'cubicIn'
+                                        },
+                                        {
+                                            percent: 1,
+                                            scaleY: 1,
+                                            easing: 'cubicOut'
+                                        }
+                                    ]
+                                }
+                            }))
+                        }
+                    ]
+                }
+            },
+
+            pass_time: 0,
+            total_time: 120,
+            speak_speed: 0,
+            speak_blank: 0,
+            dialog_content: "欢迎\n使用\n",
+
+            // 图表实例
+            gauge_chart_1: null,
+            gauge_chart_2: null,
+            line_chart: null,
+            loading_ani: null,
+
+            //记录时间戳
+            begin_time: null,
+            now_time: null,
+        },
+
+        // 生命周期函数，有很多种，created是常用的一种
+        // 在页面对应的生命周期自动执行
+        mounted() {
+
+            this.begin_time = new Date();
+
+            this.gauge_chart_1 = echarts.init(document.getElementById('gauge1'));
+            this.gauge_chart_2 = echarts.init(document.getElementById('gauge2'));
+            this.line_chart = echarts.init(document.getElementById('line_chart'));
+            this.init_left_gauge();
+            this.init_right_gauge();
+            this.init_line_chart();
+
+            // 一个定时任务，轮询刷新api
+            var self = this;
+            setInterval(function () {
+                // 更新课堂氛围
+                fetch("http://162.105.175.69:8000/his", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        self.update_line_chart(data['x'], data['teacher_score_history'], data['student_score_history']);
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+
+                // 更新教学状态
+                fetch("http://162.105.175.69:8000/teacher", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // TODO: 教学状态的仪表盘数值
+                        data = data['teacher_score'];
+                        self.update_left_gauge(Math.ceil(data * 100));
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+
+                // 更新学生状态
+                fetch("http://162.105.175.69:8000/student", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // TODO: 学生状态的仪表盘数值
+                        data = data['student_score'];
+                        self.update_right_gauge(Math.ceil(data * 100));
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+
+                // 更新语速卡片
+                fetch("http://162.105.175.69:8000/speed", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // TODO:这里获取语速和留白时间，注意字段名、数据类型、数值
+                        self.speak_speed = data['speech_rate'];
+                        self.speak_blank = Math.ceil(data['audio_silence'] * 100);
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+
+                // 定时间隔为30秒
+            }, 1000 * 30)
+
+            // 每分钟更新上课时间
+            setInterval(function () {
+                self.now_time = new Date();
+                // 计算时间差
+                const differ = self.now_time.getTime() - self.begin_time.getTime();
+                self.pass_time = Math.ceil(differ / 1000 / 60);
+            }, 1000 * 30)
+
+        },
+
+        //这里定义方法
+        methods: {
+            init_left_gauge() {
+                this.gauge_chart_1_option.title.text = '教学状态';
+                this.gauge_chart_1_option['series'][0].itemStyle.color = '#FD3A27';
+                this.gauge_chart_1_option['series'][0].detail.rich.value.color = '#FD3A27';
+                this.gauge_chart_1.setOption(this.gauge_chart_1_option);
+            },
+            init_right_gauge() {
+                this.gauge_chart_2_option.title.text = '学生状态';
+                this.gauge_chart_2_option['series'][0].itemStyle.color = '#34B33F';
+                this.gauge_chart_2_option['series'][0].detail.rich.value.color = '#34B33F';
+                this.gauge_chart_2.setOption(this.gauge_chart_2_option);
+            },
+            init_line_chart() {
+                this.line_chart.setOption(this.line_chart_option);
+            },
+            update_left_gauge(percent) {
+                this.gauge_chart_1_option['series'][0].data[0].value = percent;
+                this.gauge_chart_1.setOption(this.gauge_chart_1_option);
+            },
+            update_right_gauge(percent) {
+                this.gauge_chart_2_option['series'][0].data[0].value = percent;
+                this.gauge_chart_2.setOption(this.gauge_chart_2_option);
+            },
+            update_line_chart(timeline_list, teacher_value_list, student_value_list) {
+                this.line_chart_option.xAxis.data = timeline_list;
+                this.line_chart_option['series'][0].data = teacher_value_list;
+                this.line_chart_option['series'][1].data = student_value_list;
+                this.line_chart.setOption(this.line_chart_option);
+            },
+            click_tutor_btn() {
+                fetch("http://162.105.175.69:8000/summary", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // TODO:助教总结接口
+                        this.dialog_content = data.response;
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+            },
+            click_student_btn() {
+                fetch("http://162.105.175.69:8000/question", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // TODO:学生提问接口
+                        this.dialog_content = data.response;
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+            },
+        },
+    });
+</script>
+</body>
+</html>

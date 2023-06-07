@@ -1,0 +1,103 @@
+/*第一行的表格的宽度和高度是固定的*/
+
+.pie_chart {
+    width: 200px;
+    height: 200px;
+    background-color: #191C25;
+    border-radius: 10px;
+}
+
+/*折线图的宽度可以实时计算*/
+.line_chart {
+    width: calc(100vw - 400px - 100px);
+    height: 200px;
+    background-color: #191C25;
+    border-radius: 10px;
+}
+
+.info_card {
+    width: calc((100vw - 75px ) / 2);
+    height: 10vh;
+    background-color: #191C25;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2vh;
+    color: white;
+    border-radius: 10px;
+}
+
+
+/*第一行固定px*/
+/*第二行10vh高度*/
+/*行间距为5vh*/
+
+
+.dashboard_container {
+    width: 100vw;
+    height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/*模块的间距固定为50px，上下左右都是50px间距*/
+
+.row {
+    width: calc(100vw - 50px);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.chat_area {
+    width: 100%;
+    height: calc(100vh - 10vh - 200px - 100px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: #191C25;
+    border-radius: 10px;
+}
+
+.dialog_window {
+    width: calc(100% - 25px - 20px);
+    height: calc(100% - 50px - 50px - 20px);
+    background-color: #000000;
+    color: white;
+    border-radius: 7px;
+    padding: 10px;
+
+    /*解决文本换行问题*/
+    white-space: pre-wrap;
+}
+
+.dialog_btn_container {
+    width: calc(100% - 25px);
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.dialog_btn {
+    width: 100px;
+    height: 40px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    background-color: #3D8EEA;
+}
+
+.dialog_btn :hover{
+
+}
