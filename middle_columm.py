@@ -19,8 +19,9 @@ def calculate_speech_rate(text_file):
     with open(text_file, 'r', encoding=file_encoding, errors='replace') as file:
         text = file.read()
         # 使用正则表达式匹配中文字符和英文单词，并统计字数
-        chinese_chars = re.findall(r'[\u4e00-\u9fff]', text)
-        english_words = re.findall(r'\b\w+\b', text)
+        filtered_text = re.sub(r'[^\w\s]+', '', text)
+        chinese_chars = re.findall(r'[\u4e00-\u9fff]', filtered_text)
+        english_words = re.findall(r'\b\w+\b', filtered_text)
         word_count = len(chinese_chars) + len(english_words)
 
         # print(text, word_count)
@@ -40,7 +41,7 @@ def calculate_audio_silence(audio_file):
     return audio_percent
 
 # 指定当前文件夹路径
-def get_middle_columm(latest_audio):
+def get_middle_column(latest_audio):
     # latest_audio, latest_text = find_latest_files()
     latest_text = f"text/{latest_audio}.txt"
     latest_audio = f"audio/{latest_audio}.wav"
@@ -61,4 +62,4 @@ def get_middle_columm(latest_audio):
         return None, None
 
 # if __name__ == "__main__":
-#     get_middle_columm()
+#     get_middle_column()
