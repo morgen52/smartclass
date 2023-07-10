@@ -9,6 +9,7 @@ from myclear import clear
 import threading
 import multiprocessing
 import random
+import re
 
 app = Flask(__name__)
 origins = [
