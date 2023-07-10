@@ -68,7 +68,7 @@ def init():
     os.system("docker run -v $(pwd)/pic:/app/pic --rm -p 5002:5002 -d liminfinity/smartclass/video:0.0 python3 flask_server.py")
 
 init()
-from middle_columm import get_middle_columm
+from middle_column import get_middle_column
 from audio2text import convert_mp3_to_text
 
 def print_database():
@@ -86,7 +86,7 @@ def print_database():
         print("print_database error", e)
     db.close()
 
-def gen_middle_columm(cur_latest_audio):
+def gen_middle_column(cur_latest_audio):
     # if not cur_latest_audio:
     #     filelist = sorted(os.listdir("audio"))
     #     cur_latest_audio = filelist[-1].split('.')[0] if filelist else None # audio 没有done标记
@@ -99,7 +99,7 @@ def gen_middle_columm(cur_latest_audio):
     if result and result[0] == cur_latest_audio:
         return
 
-    speech_rate, audio_silence = get_middle_columm(cur_latest_audio)
+    speech_rate, audio_silence = get_middle_column(cur_latest_audio)
     data = {
         "speech_rate": speech_rate,
         "audio_silence": audio_silence
@@ -351,9 +351,9 @@ def handle_audio_and_text(latest_file):
 
     # 更新speed和audio_silence
     try:
-        gen_middle_columm(latest_file)
+        gen_middle_column(latest_file)
     except Exception as e:
-        print("gen_middle_columm error: ", e)
+        print("gen_middle_column error: ", e)
     
     # 更新teacher_score和teacher_score_history
     try:
@@ -527,7 +527,7 @@ def gen_summary():
     return jsonify(result)
 
 @app.route('/speed', methods=['GET'])
-def read_middle_columm():
+def read_middle_column():
     # read speed and audio_silence from database
     db = sqlite3.connect('database.db')
     cursor = db.cursor()

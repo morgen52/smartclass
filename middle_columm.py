@@ -41,7 +41,7 @@ def calculate_audio_silence(audio_file):
     return audio_percent
 
 # 指定当前文件夹路径
-def get_middle_columm(latest_audio):
+def get_middle_column(latest_audio):
     # latest_audio, latest_text = find_latest_files()
     latest_text = f"text/{latest_audio}.txt"
     latest_audio = f"audio/{latest_audio}.wav"
@@ -62,4 +62,4 @@ def get_middle_columm(latest_audio):
         return None, None
 
 # if __name__ == "__main__":
-#     get_middle_columm()
+#     get_middle_column()
