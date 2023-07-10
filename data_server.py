@@ -9,7 +9,6 @@ from myclear import clear
 import threading
 import multiprocessing
 import random
-import re
 
 app = Flask(__name__)
 origins = [
@@ -292,7 +291,7 @@ def get_summary(history, mode="normal"):
     # ChatGLM服务器的IP地址和端口号
     SERVER_IP = '10.129.160.70'
     SERVER_PORT = 5088
-    history = re.sub(r'\W+', ' ', history) # 去除标点符号
+    history = history.replace("\n", "。")
     
     # 每200个字就分割一次
     # history = [["老师讲了什么？", history[i:i+200]] for i in range(0, len(history), 200)]

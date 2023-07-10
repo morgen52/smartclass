@@ -19,8 +19,9 @@ def calculate_speech_rate(text_file):
     with open(text_file, 'r', encoding=file_encoding, errors='replace') as file:
         text = file.read()
         # 使用正则表达式匹配中文字符和英文单词，并统计字数
-        chinese_chars = re.findall(r'[\u4e00-\u9fff]', text)
-        english_words = re.findall(r'\b\w+\b', text)
+        filtered_text = re.sub(r'(\w+)\1{5,}', '', text)
+        chinese_chars = re.findall(r'[\u4e00-\u9fff]', filtered_text)
+        english_words = re.findall(r'\b\w+\b', filtered_text)
         word_count = len(chinese_chars) + len(english_words)
 
         # print(text, word_count)
