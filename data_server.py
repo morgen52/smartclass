@@ -5,7 +5,7 @@ from flask_cors import CORS
 import sqlite3
 import datetime
 import time
-from myclear import clear
+from smartclass.utils.myclear import clear
 import threading
 import multiprocessing
 import random
@@ -68,7 +68,7 @@ def init():
     os.system("docker run -v $(pwd)/pic:/app/pic --rm -p 5002:5002 -d liminfinity/smartclass/video:0.0 python3 flask_server.py")
 
 init()
-from middle_column import get_middle_column
+from middle_column_info import get_middle_column
 from audio2text import convert_mp3_to_text
 
 def print_database():
