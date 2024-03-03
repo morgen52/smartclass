@@ -1,3 +1,5 @@
+## See new version of ATMOS smart classroom project at https://github.com/morgen52/smart_classroom_backend.
+
 # SmartClass
 
 是一个智能课堂软件，能够对输入音频进行处理和分析，如计算分数、生成学生和老师的情感表情等功能。同时，它还实现了一些与服务器通信的功能，例如上传音频文件、上传图片等。程序中还有一些和读写数据库相关的函数，用于存储历史评测记录和状态信息。
